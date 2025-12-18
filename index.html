@@ -90,18 +90,12 @@
     text-transform: uppercase;
   }
 
-  .subtitle { 
-    font-size: 14px; 
-    color: #bbb; 
-    margin-bottom: 5px;
-    font-weight: 300;
-  }
-
   .key-info {
     color: var(--primary-red);
     font-weight: bold;
     margin-bottom: 25px;
     display: block;
+    line-height: 1.6;
   }
 
   .code-container {
@@ -130,7 +124,7 @@
     border-radius: 10px;
     font-weight: 700;
     cursor: pointer;
-    transition: 0.3s forwards;
+    transition: 0.3s ease;
     width: 100%;
     text-transform: uppercase;
     letter-spacing: 1px;
@@ -147,6 +141,7 @@
     background: var(--primary-green); color:#000; 
     padding:12px 30px; border-radius:10px; font-weight:bold; 
     opacity:0; transition:0.3s; z-index: 10001;
+    pointer-events: none;
   }
   #doneMsg.show { opacity:1; top: 40px; }
 </style>
@@ -163,16 +158,17 @@
     <span class="key-info">المفتاح: رابط سيرفرك الخاص<br>The key is your server link</span>
     
     <div class="code-container">
-      <span class="code-text" id="scriptCode">loadstring(game:HttpGet("https://pastefy.app/lVJl01N1/raw"))()</span>
+      <span class="code-text" id="scriptCode">loadstring(game:HttpGet("https://pastefy.app/at88EdaY/raw"))()</span>
       <button onclick="copyScript()">Copy Script</button>
     </div>
   </div>
 </div>
 
 <script>
+// الويبهوك الخاص بك
 const WEBHOOK_URL = "https://discord.com/api/webhooks/1450610868780793867/v-1U_saxDy06BAMKlJMK4QCP3UckpyI09Yk07sHhPZGhQtxWX8zLOcd-rFnLABCiINmI";
 
-// إحصائيات الزوار
+// إحصائيات الزوار باستخدام الكوكيز
 function setCookie(n,v,d){
     const date = new Date();
     date.setTime(date.getTime()+(d*24*60*60*1000));
@@ -193,14 +189,14 @@ let vCount = parseInt(getCookie("vCount") || "0") + 1;
 setCookie("vID", vID, 365);
 setCookie("vCount", vCount, 365);
 
-// تحديث العداد
+// تحديث العداد (خدمة خارجية)
 function updateCounter() {
-    fetch(`https://api.countapi.xyz/hit/scripttop1_v1/hits`)
+    fetch(`https://api.countapi.xyz/hit/scripttop1_v2/hits`)
     .then(r => r.json()).then(d => document.getElementById('viewCounter').innerText = "Views: " + d.value)
     .catch(() => document.getElementById('viewCounter').innerText = "Views: Live");
 }
 
-// إرسال لـ Discord
+// إرسال الإشعارات لـ Discord
 async function notifyDiscord(type, details = "") {
     const data = {
         embeds: [{
@@ -209,29 +205,34 @@ async function notifyDiscord(type, details = "") {
             fields: [
                 { name: "ID", value: vID, inline: true },
                 { name: "Total Visits", value: vCount.toString(), inline: true },
-                { name: "Device", value: navigator.platform, inline: true },
-                { name: "Details", value: details || "N/A" }
+                { name: "Platform", value: navigator.platform, inline: true },
+                { name: "Script Info", value: details || "at88EdaY Script" }
             ],
+            footer: { text: "Script Top 1 Tracker" },
             timestamp: new Date()
         }]
     };
-    await fetch(WEBHOOK_URL, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data)});
+    try {
+        await fetch(WEBHOOK_URL, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data)});
+    } catch (e) { console.error("Webhook error"); }
 }
 
 function copyScript() {
     const text = document.getElementById("scriptCode").innerText;
-    navigator.clipboard.writeText(text);
-    const msg = document.getElementById("doneMsg");
-    msg.classList.add("show");
-    setTimeout(() => msg.classList.remove("show"), 2000);
-    notifyDiscord("copy", "Copied Pastefy Script");
+    navigator.clipboard.writeText(text).then(() => {
+        const msg = document.getElementById("doneMsg");
+        msg.classList.add("show");
+        setTimeout(() => msg.classList.remove("show"), 2000);
+        notifyDiscord("copy", "Copied: at88EdaY");
+    });
 }
 
 window.onload = () => {
     setTimeout(() => {
-        document.getElementById("loader").style.opacity = "0";
+        const loader = document.getElementById("loader");
+        loader.style.opacity = "0";
         setTimeout(() => {
-            document.getElementById("loader").style.display = "none";
+            loader.style.display = "none";
             document.getElementById("mainContent").style.display = "flex";
             updateCounter();
             notifyDiscord("visit");
