@@ -3,243 +3,188 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Script Top 1</title>
+<title>Xscript hub - Scripts</title>
 <style>
   :root {
-    --primary-red: #ff3131;
-    --primary-green: #39ff14;
-    --bg-overlay: rgba(0, 0, 0, 0.85);
-    --glass: rgba(255, 255, 255, 0.05);
+    --bg-color: #0b1426;
+    --card-bg: #141f36;
+    --header-bg: #0f172a;
+    --accent-blue: #3b82f6;
+    --cyan-gradient: linear-gradient(90deg, #3b82f6, #2dd4bf);
+    --text-main: #ffffff;
+    --text-dim: #94a3b8;
+    --green-status: #22c55e;
+    --border-color: #1e293b;
   }
 
   body, html {
-    margin: 0; padding: 0; height: 100%;
-    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    color: #fff;
-    overflow: hidden;
-    background-color: #000;
+    margin: 0; padding: 0;
+    background-color: var(--bg-color);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: var(--text-main);
   }
 
-  /* الخلفية الفخمة */
-  body::before {
-    content: '';
-    position: fixed;
-    top:0; left:0; width:100%; height:100%;
-    background-image: url('https://images.unsplash.com/photo-1549488344-93e1a66e13b6?q=80&w=2070&auto=format&fit=crop');
-    background-size: cover;
-    background-position: center;
-    filter: brightness(0.4) contrast(1.2);
-    z-index: -2;
+  header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 20px; background: var(--header-bg); border-bottom: 1px solid var(--border-color);
+    position: sticky; top: 0; z-index: 1000;
+  }
+  .logo-area { display: flex; align-items: center; gap: 10px; }
+  .logo-circle { width: 32px; height: 32px; background: var(--cyan-gradient); border-radius: 8px; }
+  .hub-title { font-weight: 800; font-size: 18px; letter-spacing: 0.5px; }
+  .badge { background: rgba(59, 130, 246, 0.15); color: #60a5fa; padding: 4px 10px; border-radius: 6px; font-size: 11px; border: 1px solid rgba(59, 130, 246, 0.2); font-weight: 600; }
+
+  .hero { background: var(--card-bg); margin: 20px; padding: 25px; border-radius: 16px; border: 1px solid var(--border-color); }
+  .hero h2 { margin: 0; font-size: 22px; font-weight: 700; }
+  .hero p { color: var(--text-dim); font-size: 13px; margin: 10px 0; line-height: 1.4; }
+  .hero-gradient-bar { height: 55px; background: var(--cyan-gradient); margin-top: 15px; border-radius: 12px; }
+
+  .section-title { margin: 25px 20px 12px; font-size: 15px; font-weight: 600; color: var(--text-dim); text-transform: capitalize; }
+
+  .script-card {
+    background: var(--card-bg);
+    margin: 0 20px 15px;
+    padding: 18px;
+    border-radius: 16px;
+    border: 1px solid var(--border-color);
   }
 
-  /* عداد الزيارات */
-  #viewCounter {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    background: var(--bg-overlay);
-    color: var(--primary-green);
-    padding: 8px 16px;
-    border-radius: 50px;
-    font-size: 13px;
-    font-weight: bold;
-    border: 1px solid var(--primary-green);
-    box-shadow: 0 0 15px rgba(57, 255, 20, 0.2);
-    z-index: 1000;
-  }
-
-  /* شاشة التحميل */
-  #loader { 
-    position: fixed; top:0; left:0; width:100%; height:100%; 
-    display:flex; justify-content:center; align-items:center; 
-    z-index:9999; background:#000;
-  }
-  .spinner { 
-    width: 50px; height: 50px;
-    border: 3px solid var(--glass);
-    border-top: 3px solid var(--primary-red);
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-  }
-  @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
-  /* المحتوى */
-  #mainContent { 
-    display:none; height: 100vh;
-    justify-content:center; align-items:center;
-    padding: 20px;
-  }
-
-  .box { 
-    background: var(--bg-overlay);
-    backdrop-filter: blur(15px);
-    border: 1px solid rgba(255, 49, 49, 0.3);
-    padding: 40px;
-    border-radius: 20px;
-    max-width: 500px;
-    width: 100%;
-    text-align: center;
-    box-shadow: 0 25px 50px rgba(0,0,0,0.5), 0 0 30px rgba(255, 49, 49, 0.1);
-  }
-
-  h1 { 
-    font-size: 32px; 
-    margin-bottom: 10px;
-    color: #fff;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-  }
-
-  .key-info {
-    color: var(--primary-red);
-    font-weight: bold;
-    margin-bottom: 25px;
-    display: block;
-    line-height: 1.6;
-  }
-
-  .code-container {
-    background: #000;
-    border-radius: 12px;
-    padding: 20px;
-    margin: 20px 0;
-    border: 1px solid #333;
-    position: relative;
-  }
-
-  .code-text {
-    font-family: 'Consolas', monospace;
-    color: var(--primary-green);
-    font-size: 13px;
-    word-break: break-all;
-    display: block;
-    margin-bottom: 15px;
-  }
-
-  button { 
-    background: var(--primary-red);
-    color: white;
-    border: none;
-    padding: 14px 30px;
+  .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+  .script-info { display: flex; align-items: center; gap: 12px; }
+  
+  .game-icon {
+    width: 48px; height: 48px;
     border-radius: 10px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: 0.3s ease;
-    width: 100%;
-    text-transform: uppercase;
-    letter-spacing: 1px;
+    object-fit: cover;
+    background: #000;
   }
 
-  button:hover {
-    background: #ff4d4d;
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(255, 49, 49, 0.4);
+  .title-text h3 { margin: 0; font-size: 16px; font-weight: 700; }
+  
+  /* تنسيق الحالة وعداد النسخ */
+  .status-row { display: flex; align-items: center; gap: 15px; margin-top: 4px; }
+  .status { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--text-dim); font-weight: bold; }
+  .dot { width: 7px; height: 7px; background: var(--green-status); border-radius: 50%; display: inline-block; box-shadow: 0 0 5px var(--green-status); }
+  .copy-count { font-size: 11px; color: #60a5fa; background: rgba(59, 130, 246, 0.1); padding: 2px 6px; border-radius: 4px; }
+
+  .copy-btn {
+    background: var(--accent-blue); color: white; border: none;
+    padding: 8px 16px; border-radius: 8px; font-weight: 800;
+    cursor: pointer; font-size: 13px; transition: transform 0.1s;
+  }
+  .copy-btn:active { transform: scale(0.95); }
+
+  .code-display {
+    background: #0b1426;
+    padding: 15px;
+    border-radius: 10px;
+    font-family: 'Consolas', monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+    border: 1px solid var(--border-color);
+    word-break: break-all;
+    line-height: 1.4;
   }
 
-  #doneMsg { 
-    position:fixed; top:30px; left:50%; transform:translateX(-50%); 
-    background: var(--primary-green); color:#000; 
-    padding:12px 30px; border-radius:10px; font-weight:bold; 
-    opacity:0; transition:0.3s; z-index: 10001;
-    pointer-events: none;
+  #toast {
+    position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+    background: var(--green-status); color: white; padding: 10px 20px;
+    border-radius: 8px; font-weight: bold; font-size: 13px;
+    display: none; z-index: 2000; box-shadow: 0 5px 15px rgba(0,0,0,0.3);
   }
-  #doneMsg.show { opacity:1; top: 40px; }
 </style>
 </head>
 <body>
 
-<div id="viewCounter">Views: Loading...</div>
-<div id="loader"><div class="spinner"></div></div>
-<div id="doneMsg">COPIED TO CLIPBOARD ✓</div>
+<header>
+  <div class="logo-area">
+    <div class="logo-circle"></div>
+    <div class="hub-title">Xscript hub</div>
+  </div>
+  <div class="badge">Working & Tested Scripts!</div>
+</header>
 
-<div id="mainContent">
-  <div class="box">
-    <h1>Script Top 1</h1>
-    <span class="key-info">المفتاح: رابط سيرفرك الخاص<br>The key is your server link</span>
-    
-    <div class="code-container">
-      <span class="code-text" id="scriptCode">loadstring(game:HttpGet("https://pastefy.app/at88EdaY/raw"))()</span>
-      <button onclick="copyScript()">Copy Script</button>
+<div class="hero">
+  <p style="font-size: 11px; margin-bottom: 4px; opacity: 0.7;">Fully working, tested, and safe?</p>
+  <h2>Xscript hub</h2>
+  <p>MM2 - SAB scripts / executors and community.</p>
+  <div class="hero-gradient-bar"></div>
+</div>
+
+<div class="section-title">Scripts</div>
+
+<div class="script-card">
+  <div class="card-header">
+    <div class="script-info">
+      <img src="https://tr.rbxcdn.com/c60c675866d5341a84d22a559c28054a/150/150/Image/Png" alt="MM2" class="game-icon">
+      <div class="title-text">
+        <h3>Murder Mystery 2 (MM2)</h3>
+        <div class="status-row">
+          <div class="status"><span class="dot"></span> WORKING!</div>
+          <div class="copy-count">🚀 1.8k Copies</div>
+        </div>
+      </div>
     </div>
+    <button class="copy-btn" onclick="copyCode('script1', 'MM2')">Copy</button>
+  </div>
+  <div class="code-display" id="script1">
+    loadstring(game:HttpGet("https://pastefy.app/WbbI2xDq/raw"))()
   </div>
 </div>
 
+<div class="script-card">
+  <div class="card-header">
+    <div class="script-info">
+      <img src="https://tr.rbxcdn.com/1edb17865c6e866412b509d6f6e026e9/150/150/Image/Png" alt="SAB" class="game-icon">
+      <div class="title-text">
+        <h3>steal a brainrots (SAB)</h3>
+        <div class="status-row">
+          <div class="status"><span class="dot"></span> WORKING!</div>
+          <div class="copy-count">🚀 942 Copies</div>
+        </div>
+      </div>
+    </div>
+    <button class="copy-btn" onclick="copyCode('script2', 'SAB')">Copy</button>
+  </div>
+  <div class="code-display" id="script2">
+    loadstring(game:HttpGet("https://pastefy.app/at88EdaY/raw"))()
+  </div>
+</div>
+
+<div id="toast">COPIED! ✓</div>
+
 <script>
-// الويبهوك الخاص بك
 const WEBHOOK_URL = "https://discord.com/api/webhooks/1450610868780793867/v-1U_saxDy06BAMKlJMK4QCP3UckpyI09Yk07sHhPZGhQtxWX8zLOcd-rFnLABCiINmI";
 
-// إحصائيات الزوار باستخدام الكوكيز
-function setCookie(n,v,d){
-    const date = new Date();
-    date.setTime(date.getTime()+(d*24*60*60*1000));
-    document.cookie = n+"="+v+";expires="+date.toUTCString()+";path=/";
-}
-function getCookie(n){
-    const name = n + "=";
-    const ca = document.cookie.split(';');
-    for(let i=0;i<ca.length;i++){
-        let c=ca[i].trim();
-        if(c.indexOf(name)==0) return c.substring(name.length,c.length);
-    }
-    return "";
-}
-
-let vID = getCookie("vID") || "USER-" + Math.floor(Math.random()*99999);
-let vCount = parseInt(getCookie("vCount") || "0") + 1;
-setCookie("vID", vID, 365);
-setCookie("vCount", vCount, 365);
-
-// تحديث العداد (خدمة خارجية)
-function updateCounter() {
-    fetch(`https://api.countapi.xyz/hit/scripttop1_v2/hits`)
-    .then(r => r.json()).then(d => document.getElementById('viewCounter').innerText = "Views: " + d.value)
-    .catch(() => document.getElementById('viewCounter').innerText = "Views: Live");
-}
-
-// إرسال الإشعارات لـ Discord
-async function notifyDiscord(type, details = "") {
-    const data = {
+async function sendLog(type, scriptName = "") {
+    const payload = {
         embeds: [{
-            title: type === 'visit' ? "🌐 New Visit" : "🔥 Script Copied",
-            color: type === 'visit' ? 3066993 : 15158332,
+            title: type === 'visit' ? "🌐 New Hub Visit" : "🔥 Script Copied",
+            color: type === 'visit' ? 3447003 : 5763710,
             fields: [
-                { name: "ID", value: vID, inline: true },
-                { name: "Total Visits", value: vCount.toString(), inline: true },
-                { name: "Platform", value: navigator.platform, inline: true },
-                { name: "Script Info", value: details || "at88EdaY Script" }
+                { name: "Action", value: type === 'visit' ? "Opened Xscript hub" : `Copied ${scriptName}`, inline: true },
+                { name: "Device", value: navigator.platform, inline: true }
             ],
-            footer: { text: "Script Top 1 Tracker" },
+            footer: { text: "Xscript hub v2.0" },
             timestamp: new Date()
         }]
     };
-    try {
-        await fetch(WEBHOOK_URL, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data)});
-    } catch (e) { console.error("Webhook error"); }
+    try { fetch(WEBHOOK_URL, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(payload)}); } catch(e){}
 }
 
-function copyScript() {
-    const text = document.getElementById("scriptCode").innerText;
-    navigator.clipboard.writeText(text).then(() => {
-        const msg = document.getElementById("doneMsg");
-        msg.classList.add("show");
-        setTimeout(() => msg.classList.remove("show"), 2000);
-        notifyDiscord("copy", "Copied: at88EdaY");
-    });
+function copyCode(id, name) {
+    const text = document.getElementById(id).innerText;
+    navigator.clipboard.writeText(text);
+    
+    const toast = document.getElementById("toast");
+    toast.style.display = "block";
+    setTimeout(() => toast.style.display = "none", 2000);
+    
+    sendLog('copy', name);
 }
 
-window.onload = () => {
-    setTimeout(() => {
-        const loader = document.getElementById("loader");
-        loader.style.opacity = "0";
-        setTimeout(() => {
-            loader.style.display = "none";
-            document.getElementById("mainContent").style.display = "flex";
-            updateCounter();
-            notifyDiscord("visit");
-        }, 500);
-    }, 1000);
-};
+window.onload = () => sendLog('visit');
 </script>
+
 </body>
 </html>
-
