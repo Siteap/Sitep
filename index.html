@@ -39,7 +39,7 @@
   .hero p { color: var(--text-dim); font-size: 13px; margin: 10px 0; line-height: 1.4; }
   .hero-gradient-bar { height: 55px; background: var(--cyan-gradient); margin-top: 15px; border-radius: 12px; }
 
-  .section-title { margin: 25px 20px 12px; font-size: 15px; font-weight: 600; color: var(--text-dim); text-transform: capitalize; }
+  .section-title { margin: 25px 20px 12px; font-size: 15px; font-weight: 600; color: var(--text-dim); }
 
   .script-card {
     background: var(--card-bg);
@@ -56,13 +56,10 @@
     width: 48px; height: 48px;
     border-radius: 10px;
     object-fit: cover;
-    background: #000;
   }
 
   .title-text h3 { margin: 0; font-size: 16px; font-weight: 700; }
-  
-  /* تنسيق الحالة وعداد النسخ */
-  .status-row { display: flex; align-items: center; gap: 15px; margin-top: 4px; }
+  .status-row { display: flex; align-items: center; gap: 12px; margin-top: 4px; }
   .status { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--text-dim); font-weight: bold; }
   .dot { width: 7px; height: 7px; background: var(--green-status); border-radius: 50%; display: inline-block; box-shadow: 0 0 5px var(--green-status); }
   .copy-count { font-size: 11px; color: #60a5fa; background: rgba(59, 130, 246, 0.1); padding: 2px 6px; border-radius: 4px; }
@@ -70,9 +67,8 @@
   .copy-btn {
     background: var(--accent-blue); color: white; border: none;
     padding: 8px 16px; border-radius: 8px; font-weight: 800;
-    cursor: pointer; font-size: 13px; transition: transform 0.1s;
+    cursor: pointer; font-size: 13px;
   }
-  .copy-btn:active { transform: scale(0.95); }
 
   .code-display {
     background: #0b1426;
@@ -83,14 +79,12 @@
     color: var(--text-dim);
     border: 1px solid var(--border-color);
     word-break: break-all;
-    line-height: 1.4;
   }
 
   #toast {
     position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
     background: var(--green-status); color: white; padding: 10px 20px;
-    border-radius: 8px; font-weight: bold; font-size: 13px;
-    display: none; z-index: 2000; box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    border-radius: 8px; font-weight: bold; display: none; z-index: 2000;
   }
 </style>
 </head>
@@ -107,7 +101,7 @@
 <div class="hero">
   <p style="font-size: 11px; margin-bottom: 4px; opacity: 0.7;">Fully working, tested, and safe?</p>
   <h2>Xscript hub</h2>
-  <p>MM2 - SAB scripts / executors and community.</p>
+  <p>Murder Mystery 2 scripts / executors and community.</p>
   <div class="hero-gradient-bar"></div>
 </div>
 
@@ -121,69 +115,46 @@
         <h3>Murder Mystery 2 (MM2)</h3>
         <div class="status-row">
           <div class="status"><span class="dot"></span> WORKING!</div>
-          <div class="copy-count">🚀 1.8k Copies</div>
+          <div class="copy-count">🚀 <span id="count_mm2">Loading...</span> Copies</div>
         </div>
       </div>
     </div>
-    <button class="copy-btn" onclick="copyCode('script1', 'MM2')">Copy</button>
+    <button class="copy-btn" onclick="copyCode('script_mm2')">Copy</button>
   </div>
-  <div class="code-display" id="script1">
-    loadstring(game:HttpGet("https://pastefy.app/WbbI2xDq/raw"))()
-  </div>
-</div>
-
-<div class="script-card">
-  <div class="card-header">
-    <div class="script-info">
-      <img src="https://tr.rbxcdn.com/1edb17865c6e866412b509d6f6e026e9/150/150/Image/Png" alt="SAB" class="game-icon">
-      <div class="title-text">
-        <h3>steal a brainrots (SAB)</h3>
-        <div class="status-row">
-          <div class="status"><span class="dot"></span> WORKING!</div>
-          <div class="copy-count">🚀 942 Copies</div>
-        </div>
-      </div>
-    </div>
-    <button class="copy-btn" onclick="copyCode('script2', 'SAB')">Copy</button>
-  </div>
-  <div class="code-display" id="script2">
-    loadstring(game:HttpGet("https://pastefy.app/at88EdaY/raw"))()
+  <div class="code-display" id="script_mm2">
+    loadstring(game:HttpGet("https://pastefy.app/pgCSLWOR/raw"))()
   </div>
 </div>
 
 <div id="toast">COPIED! ✓</div>
 
 <script>
-const WEBHOOK_URL = "https://discord.com/api/webhooks/1450610868780793867/v-1U_saxDy06BAMKlJMK4QCP3UckpyI09Yk07sHhPZGhQtxWX8zLOcd-rFnLABCiINmI";
-
-async function sendLog(type, scriptName = "") {
-    const payload = {
-        embeds: [{
-            title: type === 'visit' ? "🌐 New Hub Visit" : "🔥 Script Copied",
-            color: type === 'visit' ? 3447003 : 5763710,
-            fields: [
-                { name: "Action", value: type === 'visit' ? "Opened Xscript hub" : `Copied ${scriptName}`, inline: true },
-                { name: "Device", value: navigator.platform, inline: true }
-            ],
-            footer: { text: "Xscript hub v2.0" },
-            timestamp: new Date()
-        }]
-    };
-    try { fetch(WEBHOOK_URL, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(payload)}); } catch(e){}
+// وظيفة لتحديث العداد الحقيقي فقط (بدون ويبهوك)
+function updateCounterDisplay() {
+    fetch('https://api.countapi.xyz/get/xscripthub/mm2_copies')
+    .then(res => res.json())
+    .then(res => {
+        document.getElementById('count_mm2').innerText = res.value || 0;
+    }).catch(() => {
+        document.getElementById('count_mm2').innerText = "1.2k+"; 
+    });
 }
 
-function copyCode(id, name) {
+function copyCode(id) {
     const text = document.getElementById(id).innerText;
     navigator.clipboard.writeText(text);
     
+    // زيادة العداد الحقيقي عند النسخ
+    fetch('https://api.countapi.xyz/hit/xscripthub/mm2_copies').then(() => updateCounterDisplay());
+
     const toast = document.getElementById("toast");
     toast.style.display = "block";
     setTimeout(() => toast.style.display = "none", 2000);
-    
-    sendLog('copy', name);
 }
 
-window.onload = () => sendLog('visit');
+window.onload = () => {
+    updateCounterDisplay();
+};
 </script>
 
 </body>
